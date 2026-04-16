@@ -137,7 +137,7 @@ streamlit run streamlit_app.py
 ```
 
 4. Open in browser
-- http://localhost:8501
+- https://timeseriesanalysisdm.streamlit.app/
 
 ## Streamlit Community Cloud Deployment
 
