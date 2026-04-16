@@ -334,7 +334,7 @@ with tab1:
     fig.add_trace(go.Scatter(x=df.index, y=df["Rolling_Vol"] * 100, line=dict(color=RED), showlegend=False), row=3, col=1)
     fig.add_trace(go.Bar(x=df.index, y=df["Momentum_10"] * 100, marker_color=np.where(df["Momentum_10"] >= 0, GREEN, RED), showlegend=False), row=4, col=1)
     fig.update_layout(height=860, template="plotly_dark", hovermode="x unified")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 with tab2:
     fig = make_subplots(rows=4, cols=1, shared_xaxes=True, vertical_spacing=0.06, subplot_titles=["Observed", "Trend", "Seasonal", "Residual"])
@@ -343,23 +343,23 @@ with tab2:
     fig.add_trace(go.Scatter(x=seasonal.index, y=seasonal, line=dict(color=GREEN)), row=3, col=1)
     fig.add_trace(go.Bar(x=residual.index, y=residual, marker_color=np.where(residual >= 0, GREEN, RED)), row=4, col=1)
     fig.update_layout(height=840, template="plotly_dark", showlegend=False, hovermode="x unified")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 with tab3:
     c1, c2, c3 = st.columns(3)
     with c1:
         f1 = go.Figure(go.Scatter(x=ks, y=inertias, mode="lines+markers", marker=dict(color=ACCENT)))
         f1.update_layout(title="Elbow (Inertia)", template="plotly_dark", height=320)
-        st.plotly_chart(f1, use_container_width=True)
+        st.plotly_chart(f1, width='stretch')
     with c2:
         f2 = go.Figure(go.Scatter(x=ks, y=sil_scores, mode="lines+markers", marker=dict(color=GREEN)))
         f2.add_vline(x=best_k, line_dash="dash", line_color=ORANGE)
         f2.update_layout(title=f"Silhouette (best={best_k})", template="plotly_dark", height=320)
-        st.plotly_chart(f2, use_container_width=True)
+        st.plotly_chart(f2, width='stretch')
     with c3:
         f3 = go.Figure(go.Scatter(x=ks, y=db_scores, mode="lines+markers", marker=dict(color=RED)))
         f3.update_layout(title="Davies-Bouldin", template="plotly_dark", height=320)
-        st.plotly_chart(f3, use_container_width=True)
+        st.plotly_chart(f3, width='stretch')
 
     fp = go.Figure()
     fp.add_trace(go.Scatter(x=df.index, y=df["Close"], line=dict(color="#e6edf3", width=0.8), opacity=0.45, name="Close"))
@@ -367,7 +367,7 @@ with tab3:
         mask = (df.index >= start) & (df.index <= end)
         fp.add_trace(go.Scatter(x=df.index[mask], y=df["Close"][mask], line=dict(color=CLUSTER_COLORS[lbl % len(CLUSTER_COLORS)], width=1.8), showlegend=False))
     fp.update_layout(title="KMeans Clusters on Price", template="plotly_dark", height=420, hovermode="x unified")
-    st.plotly_chart(fp, use_container_width=True)
+    st.plotly_chart(fp, width='stretch')
 
     pca = PCA(n_components=2)
     proj = pca.fit_transform(feature_matrix)
@@ -376,12 +376,12 @@ with tab3:
         mask = km_labels == c
         fpca.add_trace(go.Scatter(x=proj[mask, 0], y=proj[mask, 1], mode="markers", marker=dict(color=CLUSTER_COLORS[c % len(CLUSTER_COLORS)], size=8), name=f"Cluster {c}"))
     fpca.update_layout(title=f"PCA (PC1={pca.explained_variance_ratio_[0]*100:.1f}%, PC2={pca.explained_variance_ratio_[1]*100:.1f}%)", template="plotly_dark", height=420)
-    st.plotly_chart(fpca, use_container_width=True)
+    st.plotly_chart(fpca, width='stretch')
 
 with tab4:
     h = go.Figure(go.Heatmap(z=dtw_matrix, colorscale="Blues"))
     h.update_layout(title="DTW Pairwise Distance Matrix", template="plotly_dark", height=500)
-    st.plotly_chart(h, use_container_width=True)
+    st.plotly_chart(h, width='stretch')
 
     st.subheader("Motif Pairs by Cluster")
     for c in range(best_k):
@@ -406,7 +406,7 @@ with tab4:
         fm.add_trace(go.Scatter(y=normed[bi], line=dict(color=CLUSTER_COLORS[c % len(CLUSTER_COLORS)], width=2), name="Segment A"))
         fm.add_trace(go.Scatter(y=normed[bj], line=dict(color="#ffffff", width=2, dash="dash"), name="Segment B"))
         fm.update_layout(title=f"Cluster {c} Motif | DTW={best_dist:.3f}", template="plotly_dark", height=320)
-        st.plotly_chart(fm, use_container_width=True)
+        st.plotly_chart(fm, width='stretch')
 
 with tab5:
     strong = anomaly_df[anomaly_df["Strong_Anomaly"]]
@@ -416,18 +416,18 @@ with tab5:
     fa.add_trace(go.Bar(x=anomaly_df.index, y=anomaly_df["Z_Return"], marker_color=np.where(anomaly_df["Z_Return"].abs() > z_threshold, RED, ACCENT), name="Z-score"), row=2, col=1)
     fa.add_trace(go.Scatter(x=anomaly_df.index, y=anomaly_df["Rolling_Vol"] * 100, line=dict(color=PURPLE), name="Volatility"), row=3, col=1)
     fa.update_layout(height=820, template="plotly_dark", hovermode="x unified")
-    st.plotly_chart(fa, use_container_width=True)
+    st.plotly_chart(fa, width='stretch')
 
 with tab6:
     c1, c2, c3 = st.columns(3)
     with c1:
         fh = go.Figure(go.Histogram(x=df["Log_Return"] * 100, nbinsx=60, marker_color=ACCENT))
         fh.update_layout(title="Log Return Distribution", template="plotly_dark", height=320)
-        st.plotly_chart(fh, use_container_width=True)
+        st.plotly_chart(fh, width='stretch')
     with c2:
         fv = go.Figure(go.Scatter(x=df.index, y=df["Rolling_Vol"] * 100, line=dict(color=RED), fill="tozeroy"))
         fv.update_layout(title="Rolling 20-day Volatility", template="plotly_dark", height=320)
-        st.plotly_chart(fv, use_container_width=True)
+        st.plotly_chart(fv, width='stretch')
     with c3:
         sorted_ret = np.sort(df["Log_Return"].dropna()) * 100
         n = len(sorted_ret)
@@ -436,7 +436,7 @@ with tab6:
         fqq.add_trace(go.Scatter(x=theo, y=sorted_ret, mode="markers", marker=dict(color=PURPLE, size=5), name="Sample"))
         fqq.add_trace(go.Scatter(x=[theo.min(), theo.max()], y=[theo.min(), theo.max()], mode="lines", line=dict(color=ORANGE), name="Normal line"))
         fqq.update_layout(title="Q-Q Plot", template="plotly_dark", height=320)
-        st.plotly_chart(fqq, use_container_width=True)
+        st.plotly_chart(fqq, width='stretch')
 
 with tab7:
     cluster_rows = []
@@ -455,4 +455,5 @@ with tab7:
         hmap_scaled = (hmap - hmap.mean()) / (hmap.std() + 1e-8)
         fhm = go.Figure(go.Heatmap(z=hmap_scaled.values, x=hmap_scaled.columns, y=hmap_scaled.index, colorscale="RdYlGn", zmid=0))
         fhm.update_layout(title="Cluster Feature Profiles (standardized)", template="plotly_dark", height=380)
-        st.plotly_chart(fhm, use_container_width=True)
+        st.plotly_chart(fhm, width='stretch')
+
